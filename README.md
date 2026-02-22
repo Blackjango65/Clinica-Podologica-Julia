@@ -1,6 +1,6 @@
-# Clínica Podológica Julia - Landing Page Premium
+# Podológica Sobrino - Landing Page Premium
 
-Landing page de alto impacto diseñada para la **Clínica Podológica Julia**, con una estética "Dark Luxury" y acento en **Verde Neón**.
+Landing page de alto impacto diseñada para la **Podológica Sobrino**, con una estética "Dark Luxury" y acento en **Verde Neón**.
 
 ## 🚀 Características
 - **Diseño Dark Mode Premium**: Fondos negros profundos y elementos con efecto vidrio (glassmorphism).
