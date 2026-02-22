@@ -1,4 +1,1 @@
-- name: 'notify vercel'
-  uses: 'vercel/repository-dispatch/actions/status@v1'
-  with:
-    name: Vercel - clinica-podologica-julia: lint
+
