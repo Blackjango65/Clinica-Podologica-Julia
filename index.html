@@ -42,7 +42,7 @@
                 <li><a href="#servicios" class="nav-link">Servicios</a></li>
                 <li><a href="#sobre-nosotros" class="nav-link">Nosotros</a></li>
                 <li><a href="#testimonios" class="nav-link">Opiniones</a></li>
-                <li><a href="#contacto" class="btn-primary btn-sm">Cita Previa</a></li>
+                <li><a href="#appointment-modal" class="btn-primary btn-sm open-modal">Cita Previa</a></li>
             </ul>
 
             <button class="mobile-menu-toggle" id="menu-toggle">
@@ -66,7 +66,7 @@
                 <p class="hero-subtitle">Cuidado integral y avanzado de los pies con tratamientos personalizados para
                     recuperar tu bienestar al caminar.</p>
                 <div class="hero-ctas">
-                    <a href="#contacto" class="btn-primary">Reservar Cita Online</a>
+                    <a href="#appointment-modal" class="btn-primary open-modal">Reservar Cita Online</a>
                     <a href="#servicios" class="btn-secondary">Ver Tratamientos</a>
                 </div>
                 <div class="hero-stats">
@@ -374,7 +374,7 @@
             <h2 class="cta-title">¿Sientes molestias al caminar?</h2>
             <p class="cta-subtitle">No dejes que un problema en tus pies limite tu día a día. Tu primera revisión es el
                 primer paso hacia el bienestar.</p>
-            <a href="#contacto" class="btn-primary btn-lg pulse-glow">Reservar Mi Cita Ahora</a>
+            <a href="#appointment-modal" class="btn-primary btn-lg pulse-glow open-modal">Reservar Mi Cita Ahora</a>
         </div>
     </section>
 
@@ -388,7 +388,7 @@
                             d="M20 5C11.7157 5 5 11.7157 5 20C5 28.2843 11.7157 35 20 35C28.2843 35 35 28.2843 35 20C35 11.7157 28.2843 5 20 5ZM20 10V30M10 20H30"
                             stroke="#22C55E" stroke-width="3" stroke-linecap="round" />
                     </svg>
-                    <span>Podológica <strong>Julia</strong></span>
+                    <span>Podológica <strong>Sobrino</strong></span>
                 </a>
                 <p class="footer-desc">Centro avanzado de podología y salud del pie. Expertos en biomecánica,
                     quiropodología y cirugía ungueal.</p>
@@ -420,10 +420,42 @@
             </div>
         </div>
         <div class="footer-bottom text-center">
-            <p>&copy; 2024 Clínica Podológica Julia. Todos los derechos reservados. <br><small>Aviso Legal | Política de
+            <p>&copy; 2024 Clínica Podológica Sobrino. Todos los derechos reservados. <br><small>Aviso Legal | Política
+                    de
                     Privacidad</small></p>
         </div>
     </footer>
+
+    <!-- Appointment Modal -->
+    <div id="appointment-modal" class="modal">
+        <div class="modal-content glass-card">
+            <button class="modal-close" id="close-modal">&times;</button>
+            <div class="modal-header">
+                <span class="section-tag">Cita Online</span>
+                <h2 class="modal-title">Reservar Cita</h2>
+                <p>Completa tus datos y nos pondremos en contacto contigo para confirmar.</p>
+            </div>
+            <form id="appointment-form" class="appointment-form">
+                <div class="form-group">
+                    <label for="nombre">Nombre</label>
+                    <input type="text" id="nombre" name="nombre" placeholder="Tu nombre" required>
+                </div>
+                <div class="form-group">
+                    <label for="apellidos">Apellidos</label>
+                    <input type="text" id="apellidos" name="apellidos" placeholder="Tus apellidos" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Correo electrónico</label>
+                    <input type="email" id="email" name="email" placeholder="tu@email.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="telefono">Nº de Teléfono</label>
+                    <input type="tel" id="telefono" name="telefono" placeholder="600 000 000" required>
+                </div>
+                <button type="submit" class="btn-primary btn-block">Confirmar Reserva</button>
+            </form>
+        </div>
+    </div>
 
     <script src="script.js"></script>
 </body>

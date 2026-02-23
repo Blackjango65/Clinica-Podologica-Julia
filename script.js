@@ -143,8 +143,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 7. Smooth Scroll for all links
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    // 7. Smooth Scroll (Updated to exclude modal links)
+    document.querySelectorAll('a[href^="#"]:not(.open-modal)').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             e.preventDefault();
             const target = document.querySelector(this.getAttribute('href'));
@@ -156,4 +156,59 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
+
+    // 8. Appointment Modal Logic
+    const modal = document.getElementById('appointment-modal');
+    const openModalBtns = document.querySelectorAll('.open-modal');
+    const closeModalBtn = document.getElementById('close-modal');
+    const appointmentForm = document.getElementById('appointment-form');
+
+    const openModal = (e) => {
+        if (e) e.preventDefault();
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden'; // Prevent scrolling
+    };
+
+    const closeModal = () => {
+        modal.classList.remove('active');
+        document.body.style.overflow = ''; // Restore scrolling
+    };
+
+    openModalBtns.forEach(btn => {
+        btn.addEventListener('click', openModal);
+    });
+
+    if(closeModalBtn) closeModalBtn.addEventListener('click', closeModal);
+
+    // Close modal on outside click
+    window.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+
+    // Handle form submission
+    if(appointmentForm) {
+        appointmentForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            // Get form data
+            const formData = new FormData(appointmentForm);
+            const data = Object.fromEntries(formData.entries());
+            
+            console.log('Cita recibida:', data);
+            
+            // Show success message (simple alert for now, can be improved)
+            const submitBtn = appointmentForm.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerText;
+            
+            submitBtn.innerText = '¡Enviado con éxito!';
+            submitBtn.style.background = 'var(--success)';
+            
+            setTimeout(() => {
+                closeModal();
+                appointmentForm.reset();
+                submitBtn.innerText = originalText;
+                submitBtn.style.background = '';
+            }, 2000);
+        });
+    }
 });
