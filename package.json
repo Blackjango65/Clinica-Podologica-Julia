@@ -1,0 +1,12 @@
+{
+  "name": "clinica-podologica-julia",
+  "version": "1.0.0",
+  "description": "Landing page for Clínica Podológica Julia",
+  "main": "index.html",
+  "scripts": {
+    "start": "servor"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
