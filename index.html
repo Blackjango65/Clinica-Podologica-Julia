@@ -457,7 +457,44 @@
         </div>
     </div>
 
+    <!-- Chatbot Widget -->
+    <div class="chatbot-widget">
+        <div class="chatbot-button" id="chatbot-toggle">
+            <i class="fas fa-comment-dots"></i>
+        </div>
+        <div class="chatbot-window" id="chatbot-window">
+            <div class="chatbot-header">
+                <div class="agent-avatar">
+                    <i class="fas fa-user-doctor"></i>
+                    <div class="status-indicator"></div>
+                </div>
+                <div class="agent-info">
+                    <h4>Asistente Virtual</h4>
+                    <p>En línea • Responde al instante</p>
+                </div>
+            </div>
+            <div class="chatbot-messages" id="chatbot-messages">
+                <div class="message agent">
+                    ¡Hola! 👋 Soy tu asistente virtual de Clínica Sobrino. ¿En qué puedo ayudarte hoy? Podemos agendar
+                    una cita o resolver tus dudas sobre tratamientos.
+                </div>
+            </div>
+            <div class="typing-indicator" id="typing-indicator">El asistente está escribiendo...</div>
+            <form class="chatbot-input" id="chatbot-form">
+                <input type="text" id="chatbot-input" placeholder="Escribe un mensaje..." autocomplete="off">
+                <button type="button" class="chatbot-voice" id="chatbot-voice">
+                    <i class="fas fa-microphone"></i>
+                </button>
+                <button type="submit" class="chatbot-send">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </form>
+
+        </div>
+    </div>
+
     <script src="script.js"></script>
 </body>
+
 
 </html>

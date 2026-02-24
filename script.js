@@ -7,18 +7,18 @@ document.addEventListener('DOMContentLoaded', () => {
         for (let i = 0; i < particleCount; i++) {
             const particle = document.createElement('div');
             particle.className = 'particle';
-            
+
             // Random position
             particle.style.left = Math.random() * 100 + '%';
             particle.style.top = Math.random() * 100 + '%';
-            
+
             // Random animation delay and duration
             const delay = Math.random() * 20;
             const duration = 15 + Math.random() * 10;
-            
+
             particle.style.animationDelay = `${delay}s`;
             particle.style.animationDuration = `${duration}s`;
-            
+
             container.appendChild(particle);
         }
     };
@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             navbar.classList.remove('scrolled');
         }
-        
+
         // Active spy
         spyLinks();
     });
@@ -78,7 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     counter.innerText = target;
                 }
             };
-            
+
             updateCount();
         });
     };
@@ -90,7 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const counterObserver = new IntersectionObserver((entries, observer) => {
         entries.forEach(entry => {
-            if(entry.isIntersecting) {
+            if (entry.isIntersecting) {
                 animateCounters();
                 observer.unobserve(entry.target);
             }
@@ -98,16 +98,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }, observerOptions);
 
     const statsSection = document.querySelector('.hero-stats');
-    if(statsSection) counterObserver.observe(statsSection);
+    if (statsSection) counterObserver.observe(statsSection);
 
     // 5. Intersection Observer for Reveals
     const revealElements = document.querySelectorAll('.service-card-flip, .testimonial-card, .about-content');
-    
+
     const revealObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 entry.target.classList.add('visible');
-                // Optional: trigger specific animations here
             }
         });
     }, { threshold: 0.1 });
@@ -132,23 +131,22 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     addRevealStyles();
 
-    // 6. Mobile Menu (Basic implementation)
+    // 6. Mobile Menu
     const menuToggle = document.getElementById('menu-toggle');
     const navLinksList = document.querySelector('.nav-links');
 
-    if(menuToggle) {
+    if (menuToggle) {
         menuToggle.addEventListener('click', () => {
             navLinksList.classList.toggle('mobile-active');
-            // Style for mobile-active would go in CSS if needed more complexly
         });
     }
 
-    // 7. Smooth Scroll (Updated to exclude modal links)
+    // 7. Smooth Scroll
     document.querySelectorAll('a[href^="#"]:not(.open-modal)').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             e.preventDefault();
             const target = document.querySelector(this.getAttribute('href'));
-            if(target) {
+            if (target) {
                 window.scrollTo({
                     top: target.offsetTop - 80,
                     behavior: 'smooth'
@@ -166,49 +164,193 @@ document.addEventListener('DOMContentLoaded', () => {
     const openModal = (e) => {
         if (e) e.preventDefault();
         modal.classList.add('active');
-        document.body.style.overflow = 'hidden'; // Prevent scrolling
+        document.body.style.overflow = 'hidden';
     };
 
     const closeModal = () => {
         modal.classList.remove('active');
-        document.body.style.overflow = ''; // Restore scrolling
+        document.body.style.overflow = '';
     };
 
     openModalBtns.forEach(btn => {
         btn.addEventListener('click', openModal);
     });
 
-    if(closeModalBtn) closeModalBtn.addEventListener('click', closeModal);
+    if (closeModalBtn) closeModalBtn.addEventListener('click', closeModal);
 
-    // Close modal on outside click
     window.addEventListener('click', (e) => {
         if (e.target === modal) closeModal();
     });
 
-    // Handle form submission
-    if(appointmentForm) {
+    if (appointmentForm) {
         appointmentForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            
-            // Get form data
             const formData = new FormData(appointmentForm);
             const data = Object.fromEntries(formData.entries());
-            
-            console.log('Cita recibida:', data);
-            
-            // Show success message (simple alert for now, can be improved)
             const submitBtn = appointmentForm.querySelector('button[type="submit"]');
             const originalText = submitBtn.innerText;
-            
+
             submitBtn.innerText = '¡Enviado con éxito!';
             submitBtn.style.background = 'var(--success)';
-            
+
             setTimeout(() => {
                 closeModal();
                 appointmentForm.reset();
                 submitBtn.innerText = originalText;
                 submitBtn.style.background = '';
             }, 2000);
+        });
+    }
+
+    // 9. Chatbot Logic
+    const chatbotToggle = document.getElementById('chatbot-toggle');
+    const chatbotWindow = document.getElementById('chatbot-window');
+    const chatbotForm = document.getElementById('chatbot-form');
+    const chatbotInput = document.getElementById('chatbot-input');
+    const chatbotMessages = document.getElementById('chatbot-messages');
+    const typingIndicator = document.getElementById('typing-indicator');
+    const voiceBtn = document.getElementById('chatbot-voice');
+
+    const speak = (text) => {
+        if ('speechSynthesis' in window) {
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'es-ES';
+            window.speechSynthesis.speak(utterance);
+        }
+    };
+
+    let recognition;
+    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        recognition = new SpeechRecognition();
+        recognition.lang = 'es-ES';
+
+        recognition.onstart = () => {
+            voiceBtn.classList.add('listening');
+            chatbotInput.placeholder = "Escuchando...";
+        };
+
+        recognition.onresult = (event) => {
+            const transcript = event.results[0][0].transcript;
+            chatbotInput.value = transcript;
+            voiceBtn.classList.remove('listening');
+            chatbotForm.dispatchEvent(new Event('submit'));
+        };
+
+        recognition.onerror = () => voiceBtn.classList.remove('listening');
+        recognition.onend = () => voiceBtn.classList.remove('listening');
+    }
+
+    if (voiceBtn) {
+        voiceBtn.addEventListener('click', () => {
+            if (recognition) {
+                if (voiceBtn.classList.contains('listening')) {
+                    recognition.stop();
+                } else {
+                    recognition.start();
+                }
+            }
+        });
+    }
+
+    if (chatbotToggle) {
+        chatbotToggle.addEventListener('click', () => {
+            chatbotWindow.classList.toggle('active');
+            if (chatbotWindow.classList.contains('active')) chatbotInput.focus();
+        });
+    }
+
+    const addMessage = (text, sender) => {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${sender}`;
+        messageDiv.innerText = text;
+        chatbotMessages.appendChild(messageDiv);
+        chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+    };
+
+    const searchWikipedia = async (query) => {
+        const cleanQuery = query.toLowerCase()
+            .replace(/¿|\?|qué es |quién es |define |que son |que es |busca |sobre |dime |cuéntame |háblame /g, "")
+            .trim();
+        if (cleanQuery.length < 3) return null;
+        try {
+            const searchUrl = `https://es.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(cleanQuery)}&format=json&origin=*`;
+            const res = await fetch(searchUrl);
+            const data = await res.json();
+            if (data.query?.search?.length > 0) {
+                const title = data.query.search[0].title;
+                const sumRes = await fetch(`https://es.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(title.replace(/ /g, '_'))}`);
+                if (sumRes.ok) {
+                    const sumData = await sumRes.json();
+                    return sumData.extract;
+                }
+            }
+        } catch (e) { console.error("Error Wikipedia:", e); }
+        return null;
+    };
+
+    const getAgentResponse = async (userInput) => {
+        const input = userInput.toLowerCase().trim();
+
+        // 1. SALUDOS
+        const greetings = ['hola', 'buenos dias', 'buenos días', 'buenas tardes', 'buenas noches', 'buenas'];
+        if (greetings.some(g => input === g || input.startsWith(g + ' '))) {
+            return "¡Hola! 👋 Soy el asistente de Clínica Sobrino. ¿Quieres saber sobre nuestros servicios, horarios o cómo pedir una cita?";
+        }
+
+        // 2. CONTACTO / UBICACIÓN / HORARIO
+        if (input.includes('donde') || input.includes('dónde') || input.includes('ubicacion') || input.includes('dirección') || input.includes('direccion')) {
+            return "Estamos en **Av. Virgen de la Montaña, Nº 19, Bajo, en Cáceres**. ¡Estaremos encantados de recibirte!";
+        }
+        if (input.includes('telefono') || input.includes('teléfono') || input.includes('contacto') || input.includes('llamar')) {
+            return "Puedes llamarnos al **+34 679 86 29 54**.";
+        }
+        if (input.includes('horario') || input.includes('abierto') || input.includes('abren')) {
+            return "Nuestro horario es de **Lunes a Viernes de 9:00 a 20:00**.";
+        }
+
+        // 3. CITAS Y PRECIOS
+        if (input.includes('cita') || input.includes('reserva')) {
+            return "Pide tu cita pulsando el botón **'Cita Previa'** arriba a la derecha.";
+        }
+        if (input.includes('precio') || input.includes('cuanto cuesta') || input.includes('vale')) {
+            return "La quiropodología general cuesta **35€**. Para otros tratamientos, te daremos presupuesto tras valorarte.";
+        }
+
+        // 4. SERVICIOS (Prioridad Local)
+        const services = Array.from(document.querySelectorAll('.service-card-back'));
+        for (let s of services) {
+            const title = s.querySelector('h3').innerText.toLowerCase();
+            if (input.includes(title)) {
+                return `Sobre **${title.toUpperCase()}**: ${s.querySelector('p').innerText}`;
+            }
+        }
+
+        // 5. MÉDICO (Wikipedia) - MUY SELECTIVO
+        const medical = ['fascitis', 'juanete', 'hongo', 'uña', 'papiloma', 'verruga', 'heloma', 'callo'];
+        if (medical.some(m => input.includes(m))) {
+            const wiki = await searchWikipedia(input);
+            if (wiki) return `Dato médico externo: ${wiki} \n\nRecuerda pedir cita con la Dra. Julia para un diagnóstico real.`;
+        }
+
+        return "Lo siento, no tengo esa información exacta. ¿Quieres que hablemos de nuestros servicios, horarios o citas?";
+    };
+
+    if (chatbotForm) {
+        chatbotForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const message = chatbotInput.value.trim();
+            if (message) {
+                addMessage(message, 'user');
+                chatbotInput.value = '';
+                typingIndicator.style.display = 'block';
+
+                const response = await getAgentResponse(message);
+
+                typingIndicator.style.display = 'none';
+                addMessage(response, 'agent');
+                speak(response);
+            }
         });
     }
 });
