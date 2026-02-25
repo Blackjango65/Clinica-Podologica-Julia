@@ -210,14 +210,32 @@ document.addEventListener('DOMContentLoaded', () => {
     const chatbotMessages = document.getElementById('chatbot-messages');
     const typingIndicator = document.getElementById('typing-indicator');
     const voiceBtn = document.getElementById('chatbot-voice');
+    const muteBtn = document.getElementById('chatbot-mute');
+    let isMuted = false;
 
     const speak = (text) => {
-        if ('speechSynthesis' in window) {
+        if (!isMuted && 'speechSynthesis' in window) {
             const utterance = new SpeechSynthesisUtterance(text);
             utterance.lang = 'es-ES';
             window.speechSynthesis.speak(utterance);
         }
     };
+
+    if (muteBtn) {
+        muteBtn.addEventListener('click', () => {
+            isMuted = !isMuted;
+            muteBtn.classList.toggle('muted', isMuted);
+            const icon = muteBtn.querySelector('i');
+            if (isMuted) {
+                icon.className = 'fas fa-volume-mute';
+                muteBtn.title = "Activar sonido";
+                window.speechSynthesis.cancel(); // Stop current speech
+            } else {
+                icon.className = 'fas fa-volume-up';
+                muteBtn.title = "Silenciar";
+            }
+        });
+    }
 
     let recognition;
     if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
@@ -311,19 +329,33 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // 3. CITAS Y PRECIOS
         if (input.includes('cita') || input.includes('reserva')) {
-            return "Pide tu cita pulsando el botón **'Cita Previa'** arriba a la derecha.";
+            return "Para concertar una cita, puedes llamarnos directamente al **+34 679 86 29 54** o pulsar el botón **'Cita Previa'** arriba a la derecha para reservar online.";
         }
         if (input.includes('precio') || input.includes('cuanto cuesta') || input.includes('vale')) {
             return "La quiropodología general cuesta **35€**. Para otros tratamientos, te daremos presupuesto tras valorarte.";
         }
 
         // 4. SERVICIOS (Prioridad Local)
-        const services = Array.from(document.querySelectorAll('.service-card-back'));
-        for (let s of services) {
+        const servicesCards = Array.from(document.querySelectorAll('.service-card-back'));
+
+        // Si pregunta específicamente por uno
+        for (let s of servicesCards) {
             const title = s.querySelector('h3').innerText.toLowerCase();
             if (input.includes(title)) {
                 return `Sobre **${title.toUpperCase()}**: ${s.querySelector('p').innerText}`;
             }
+        }
+
+        // Si pregunta por servicios en general
+        if (input.includes('servicio') || input.includes('tratamiento') || input.includes('haces') || input.includes('ofrece')) {
+            let response = "En Clínica Sobrino ofrecemos los siguientes tratamientos avanzados:\n\n";
+            servicesCards.forEach(s => {
+                const title = s.querySelector('h3').innerText;
+                const desc = s.querySelector('p').innerText;
+                response += `• **${title}**: ${desc}\n`;
+            });
+            response += "\n¿Te gustaría saber más sobre alguno en concreto?";
+            return response;
         }
 
         // 5. MÉDICO (Wikipedia) - MUY SELECTIVO
