@@ -417,7 +417,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return "Puedes llamarnos al **+34 679 86 29 54**.";
         }
         if (input.includes('horario') || input.includes('abierto') || input.includes('abren')) {
-            return "Nuestro horario es de **Lunes a Viernes de 9:00 a 20:00**.";
+            return "Nuestro horario es de **Lunes a Viernes: mañanas de 9:30 a 13:30 y tardes de 16:30 a 20:00**.";
         }
 
         // 3. CITAS Y PRECIOS
@@ -426,6 +426,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (input.includes('precio') || input.includes('cuanto cuesta') || input.includes('vale')) {
             return "La quiropodología general cuesta **35€**. Para otros tratamientos, te daremos presupuesto tras valorarte.";
+        }
+        if (input.includes('seguro') || input.includes('aseguradora') || input.includes('mutua') || input.includes('convenio') || input.includes('compañia')) {
+            return "Trabajamos con las principales aseguradoras: **Caser, Catalana Occidente, Divina Pastora, Nueva Mutua Sanitaria y Santalucía**. Además, tenemos convenios con **MUGEJU, MUFACE e ISFAS**. ¿Tu seguro está entre ellos?";
         }
 
         // 4. SERVICIOS (Prioridad Local)
