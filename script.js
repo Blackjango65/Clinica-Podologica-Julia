@@ -194,7 +194,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (statsSection) counterObserver.observe(statsSection);
 
     // 5. Intersection Observer for Reveals
-    const revealElements = document.querySelectorAll('.service-card-flip, .testimonial-card, .about-content');
+    const revealElements = document.querySelectorAll('.service-card-flip, .testimonial-card, .about-content, .hero-home-badge');
 
     const revealObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
@@ -418,6 +418,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (input.includes('horario') || input.includes('abierto') || input.includes('abren')) {
             return "Nuestro horario es de **Lunes a Viernes: mañanas de 9:30 a 13:30 y tardes de 16:30 a 20:00**.";
+        }
+
+        // 2.1 SERVICIOS A DOMICILIO
+        if (input.includes('domicilio') || input.includes('casa') || input.includes('venir')) {
+            return "¡Sí! Ofrecemos **servicios a domicilio** para personas con movilidad reducida o para quienes prefieren la comodidad de su hogar. Realizamos quiropodología completa y curas. ¿Te gustaría agendar una visita?";
         }
 
         // 3. CITAS Y PRECIOS
