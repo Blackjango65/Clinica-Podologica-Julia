@@ -1,5 +1,35 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Particle System
+    // 1. Star & Particle System
+    const createStars = () => {
+        const container = document.getElementById('stars-container');
+        const starCount = 150;
+
+        for (let i = 0; i < starCount; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+
+            // Random size 1-3px
+            const size = Math.random() * 2 + 1;
+            star.style.width = `${size}px`;
+            star.style.height = `${size}px`;
+
+            // Random position
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 100 + '%';
+
+            // Random animation delay and duration
+            const delay = Math.random() * 10;
+            const duration = 3 + Math.random() * 5;
+            const maxOpacity = 0.2 + Math.random() * 0.6;
+
+            star.style.setProperty('--duration', `${duration}s`);
+            star.style.setProperty('--max-opacity', maxOpacity);
+            star.style.animationDelay = `${delay}s`;
+
+            container.appendChild(star);
+        }
+    };
+
     const createParticles = () => {
         const container = document.getElementById('particles-container');
         const particleCount = 40;
@@ -8,22 +38,85 @@ document.addEventListener('DOMContentLoaded', () => {
             const particle = document.createElement('div');
             particle.className = 'particle';
 
-            // Random position
+            // Random size 2-6px
+            const size = Math.random() * 4 + 2;
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+
+            // Random horizontal position
             particle.style.left = Math.random() * 100 + '%';
-            particle.style.top = Math.random() * 100 + '%';
 
-            // Random animation delay and duration
+            // Random animation params
             const delay = Math.random() * 20;
-            const duration = 15 + Math.random() * 10;
+            const duration = 10 + Math.random() * 20;
+            const drift = (Math.random() - 0.5) * 200 + 'px'; // -100px to 100px drift
 
-            particle.style.animationDelay = `${delay}s`;
-            particle.style.animationDuration = `${duration}s`;
+            particle.style.setProperty('--duration', `${duration}s`);
+            particle.style.setProperty('--drift', drift);
+            particle.style.animationDelay = `${-delay}s`; // Negative delay to start mid-animation
 
             container.appendChild(particle);
         }
     };
 
+    createStars();
     createParticles();
+
+    // 2. Theme Switching Logic
+    const themeDots = document.querySelectorAll('.theme-dot');
+
+    // Function to darken or lighten a color (simplified)
+    const adjustColor = (hex, amount) => {
+        let r = parseInt(hex.slice(1, 3), 16);
+        let g = parseInt(hex.slice(3, 5), 16);
+        let b = parseInt(hex.slice(5, 7), 16);
+
+        r = Math.max(0, Math.min(255, r + amount));
+        g = Math.max(0, Math.min(255, g + amount));
+        b = Math.max(0, Math.min(255, b + amount));
+
+        const toHex = (n) => n.toString(16).padStart(2, '0');
+        return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+    };
+
+    const setTheme = (color) => {
+        const root = document.documentElement;
+
+        // Helper to convert hex to RGB
+        const hexToRgb = (hex) => {
+            const r = parseInt(hex.slice(1, 3), 16);
+            const g = parseInt(hex.slice(3, 5), 16);
+            const b = parseInt(hex.slice(5, 7), 16);
+            return `${r}, ${g}, ${b}`;
+        };
+
+        // Update main primary colors
+        root.style.setProperty('--primary-500', color);
+        root.style.setProperty('--primary-rgb', hexToRgb(color));
+        root.style.setProperty('--primary-400', adjustColor(color, 40));
+        root.style.setProperty('--primary-300', adjustColor(color, 80));
+        root.style.setProperty('--primary-600', adjustColor(color, -40));
+        root.style.setProperty('--primary-700', adjustColor(color, -80));
+        root.style.setProperty('--primary-100', adjustColor(color, 150));
+        root.style.setProperty('--success', color);
+
+        // Update active class on dots
+        themeDots.forEach(dot => {
+            if (dot.dataset.color === color) {
+                dot.classList.add('active');
+            } else {
+                dot.classList.remove('active');
+            }
+        });
+    };
+
+    themeDots.forEach(dot => {
+        dot.addEventListener('click', () => {
+            const color = dot.dataset.color;
+            setTheme(color);
+        });
+    });
+
 
     // 2. Navbar Scroll Effect
     const navbar = document.getElementById('navbar');
