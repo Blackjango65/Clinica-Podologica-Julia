@@ -4,9 +4,19 @@
   "description": "Landing page for Clínica Podológica Julia",
   "main": "index.html",
   "scripts": {
-    "start": "servor"
+    "start": "servor",
+    "test": "npx playwright test",
+    "test:chromium": "npx playwright test --project=chromium-desktop",
+    "test:firefox": "npx playwright test --project=firefox-desktop",
+    "test:webkit": "npx playwright test --project=webkit-desktop",
+    "test:mobile": "npx playwright test --project=mobile-chrome --project=mobile-safari",
+    "test:report": "npx playwright show-report playwright-report"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.50.0",
+    "serve": "^14.2.0"
+  }
 }
